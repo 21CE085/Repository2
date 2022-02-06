@@ -2,4 +2,6 @@
 int main()
 {
   printf("Genius Nirmit");
+  printf("Genius");
+  return 0;
 }
