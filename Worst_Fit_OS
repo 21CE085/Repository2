@@ -1,0 +1,90 @@
+// Write a C program to simulate the following contiguous memory
+// allocation techniques
+// Worst-fit
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct Memory
+{
+    int size;
+    bool isAllocated;
+};
+
+bool cmp(Memory block1, Memory block2)
+{
+    return block2.size < block1.size;
+}
+
+int worstFit(vector<Memory> &blocks, int totalBlocks, int processSize)
+{
+    int blockInd = -1;
+    int maxBlockSize = 0;
+
+    for (int i = totalBlocks - 1; i >= 0; i--)
+    {
+        if (blocks[i].isAllocated == false && blocks[i].size >= processSize)
+        {
+            if (maxBlockSize < blocks[i].size)
+            {
+                maxBlockSize = blocks[i].size;
+                blockInd = i;
+            }
+        }
+    }
+    return blockInd;
+}
+
+void memoryAllocate(vector<Memory> &blocks, int totalBlocks, int processSize)
+{
+    int blockInd = worstFit(blocks, totalBlocks, processSize);
+
+    if (blockInd != -1)
+    {
+        blocks[blockInd].isAllocated = 1;
+        cout << "Process allocated to block with memory size " << blocks[blockInd].size << endl;
+    }
+    else
+        cout << "Process cannot be allocated" << endl;
+}
+
+void displayMemoryAllocation(vector<Memory> &blocks, int totalBlocks)
+{
+    for (int i = 0; i < totalBlocks; i++)
+        cout << blocks[i].size << " " << blocks[i].isAllocated << endl;
+}
+
+int main()
+{
+    int totalBlocks;
+    cin >> totalBlocks;
+
+    vector<Memory> blocks(totalBlocks);
+    for (int i = 0; i < totalBlocks; i++)
+    {
+        int size;
+        cin >> size;
+        blocks[i].size = size;
+        blocks[i].isAllocated = false;
+    }
+
+    sort(blocks.begin(), blocks.end(), cmp);
+    displayMemoryAllocation(blocks, totalBlocks);
+
+    int totalProcesses;
+    cin >> totalProcesses;
+
+    vector<int> processes(totalProcesses);
+    for (int i = 0; i < totalProcesses; i++)
+    {
+        int size;
+        cin >> size;
+        processes[i] = size;
+    }
+
+    for (int i = 0; i < totalProcesses; i++)
+        memoryAllocate(blocks, totalBlocks, processes[i]);
+    displayMemoryAllocation(blocks, totalBlocks);
+    return 0;
+}
